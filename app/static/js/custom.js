@@ -138,22 +138,26 @@ $(document).ready(function() {
             queue_table.html("");
             
             for (var i = data.length - 1; i >= 0; i--) {
+				console.log(data[i]);
                 var html="<tr><td>"+data[i].description+"</td><td>"+JSON.stringify(data[i].args)+"</td>"+
                 "<td>"+data[i].state+"</td></tr>";
                 $(html).appendTo(queue_table);
                 switch (data[i].state) {
                 case "active":
                     $("<tr><td colspan=4><progress value="+data[i].progress[0]+" max="+data[i].progress[1]+" style='width:100%'/></td></tr>").appendTo(queue_table);
-                case "failed":
-                    $("<tr><td colspan=4 style='color:red'>"+data[i].exception+"</td></tr>").appendTo(queue_table);
+                
                 }
+				var album_id = JSON.parse(unescape(data[i].args).replace(/&#39;/ig,'"').replaceAll('False', 'false')).album_id
+				$("<tr><td colspan=4 style='color:red'>"+data[i].exception+"</td>" + '<td> <button class="btn btn-default" onclick="deezer_download(\'' +
+                     album_id  + '\', \''+ 'album' +
+                     '\', false, false);" > <i class="fa fa-download fa-lg" title="download" ></i> </button> </td></tr>').appendTo(queue_table);
             }
             if ($("#nav-task-queue").hasClass("active")) {
                 setTimeout(show_task_queue, 1000);
             }
         });
     }
-
+ 
     $("#search_track").click(function() {
         search("track");
     });
